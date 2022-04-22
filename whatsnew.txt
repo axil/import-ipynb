@@ -1,0 +1,1 @@
+0.1.4 added dependencies to setup.py (thanks, @ArnaudWald)
