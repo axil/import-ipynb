@@ -1,7 +1,9 @@
 import io, os, sys, types
 from IPython import get_ipython
 from nbformat import read
+import importlib
 from IPython.core.interactiveshell import InteractiveShell
+
 
 def find_notebook(fullname, path=None):
     """find a notebook, given its fully qualified name and an optional path
@@ -22,15 +24,16 @@ def find_notebook(fullname, path=None):
         if os.path.isfile(nb_path):
             return nb_path
 
+
 class NotebookLoader(object):
     """Module Loader for Jupyter Notebooks"""
     def __init__(self, path=None):
         self.shell = InteractiveShell.instance()
-        self.path = path
+        self._path = path
 
-    def load_module(self, fullname):
+    def create_module(self, spec):
         """import a notebook as a module"""
-        path = find_notebook(fullname, self.path)
+        path = find_notebook(spec.name, self._path)
 
         print ("importing Jupyter notebook from %s" % path)
 
@@ -41,11 +44,11 @@ class NotebookLoader(object):
 
         # create the module and add it to sys.modules if name in sys.modules:
         #    return sys.modules[name]
-        mod = types.ModuleType(fullname)
+        mod = types.ModuleType(spec.name)
         mod.__file__ = path
         mod.__loader__ = self
         mod.__dict__['get_ipython'] = get_ipython
-        sys.modules[fullname] = mod
+        sys.modules[spec.name] = mod
 
         # extra work to ensure that magics that would affect the user_ns
         # actually affect the notebook module's ns
@@ -63,25 +66,13 @@ class NotebookLoader(object):
             self.shell.user_ns = save_user_ns
         return mod
 
+    def exec_module(self, mod):
+        return mod
+
 
 class NotebookFinder(object):
-    """Module finder that locates Jupyter Notebooks"""
-    def __init__(self):
-        self.loaders = {}
-
-    def find_module(self, fullname, path=None):
-        nb_path = find_notebook(fullname, path)
-        if not nb_path:
-            return
-
-        key = path
-        if path:
-            # lists aren't hashable
-            key = os.path.sep.join(path)
-
-        if key not in self.loaders:
-            self.loaders[key] = NotebookLoader(path)
-        return self.loaders[key]
+    def find_spec(self, fullname, path=None, target=None):
+        return importlib.util.spec_from_loader(fullname, NotebookLoader(path), is_package=False)
 
 
 sys.meta_path.append(NotebookFinder())
