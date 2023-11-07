@@ -67,7 +67,7 @@ class NotebookLoader(object):
         return mod
 
     def exec_module(self, mod):
-        return mod
+        return None
 
 
 class NotebookFinder(object):
