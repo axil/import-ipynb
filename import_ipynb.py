@@ -72,6 +72,9 @@ class NotebookLoader(object):
 
 class NotebookFinder(object):
     def find_spec(self, fullname, path=None, target=None):
+        nb_path = find_notebook(fullname, path)
+        if not nb_path:
+            return
         return importlib.util.spec_from_loader(fullname, NotebookLoader(path), is_package=False)
 
 
