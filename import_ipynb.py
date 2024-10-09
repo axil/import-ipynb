@@ -36,7 +36,7 @@ class NotebookLoader(object):
     def create_module(self, spec):
         """import a notebook as a module"""
         path = find_notebook(spec.name, self.path)
-        print("importing Jupyter notebook from %s" % path)
+#        print("importing Jupyter notebook from %s" % path)
         mod = ModuleSpec(name=spec.name, loader=self, origin=path)
         return mod
 
