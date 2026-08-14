@@ -42,7 +42,7 @@ memory).
 Credits
 -------
 
-The code within imoprt\_ipynb.py comes from
+The code within import\_ipynb.py comes from
 http://jupyter-notebook.readthedocs.io/en/latest/examples/Notebook/Importing%20Notebooks.html.
 
 Riley F. Edmunds (@rileyedmunds) wrote instructions on how to use it

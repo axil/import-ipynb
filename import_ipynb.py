@@ -6,7 +6,7 @@ from importlib.machinery import ModuleSpec
 from nbformat import read
 from IPython.core.interactiveshell import InteractiveShell
 
-__version__ = "0.2"
+__version__ = "0.2.1"
 
 
 def find_notebook(fullname, path=None):
